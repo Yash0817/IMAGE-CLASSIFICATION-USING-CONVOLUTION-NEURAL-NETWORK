@@ -1,0 +1,5 @@
+Image classification is an important topic in artificial vision systems, and has drawn a significant amount of interest over the last decades. This field aims to classify an input image based on visual content. 
+ 
+The ability to classify things correctly requires many hours of training. People get things wrong many times, until eventually, they get it right. The same structure applies to machine learning. By using a high-quality set of data, deep learning can classify objects comparatively well or even better than humans can. With achieving utterly accurate image classifier, some of the monotonous jobs could be replaced by machines, so that humanity could focus on the most enjoyable activities. 
+ 
+It is the core foundation for bigger problems such as Computer Vision, Face Recognition System, or Self-driving car. With the development of deep Convolutional Neural Network (CNN), researchers have achieved good performance on the image recognition task.   
