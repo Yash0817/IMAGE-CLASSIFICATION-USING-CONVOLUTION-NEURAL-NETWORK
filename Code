@@ -1,0 +1,162 @@
+#!/usr/bin/env python
+# coding: utf-8
+# ### Import Libraries
+# In[ ]:
+from tensorflow.keras.datasets import cifar10
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Flatten, Conv2D, MaxPooling2
+D
+from tensorflow.keras.losses import sparse_categorical_crossentropy
+from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.models import Model
+import matplotlib.pyplot as plt
+from keras import callbacks
+import random
+import matplotlib.pyplot as plt
+import cv2
+import numpy as np
+# ### Model configuration
+# In[ ]:
+batch_size = 50
+img_width, img_height, img_num_channels = 32, 32, 3
+loss_function = sparse_categorical_crossentropy
+no_classes = 10
+no_epochs = 50
+optimizer = Adam()
+validation_split = 0.2
+verbosity = 1
+earlystopping = callbacks.EarlyStopping(monitor ="val_loss",mode ="min"
+, patience = 40,restore_best_weights = True)
+# ### Load CIFAR-10 data
+# In[ ]:
+(input_train, target_train), (input_test, target_test) = cifar10.load_d
+ata()
+# ### Display images with labels
+# In[ ]:
+class_names = ['airplane', 'automobile', 'bird', 'cat', 'deer','dog', '
+frog', 'horse', 'ship', 'truck']
+x = random.sample(range(1,600), 25)
+plt.figure(figsize=(10,10))
+for i in range(25):j=x[i]
+plt.subplot(5,5,i+1)
+plt.xticks([])
+plt.yticks([])
+plt.grid(False)
+plt.imshow(input_train[j], cmap=plt.cm.binary)
+# The CIFAR labels happen to be arrays,
+# which is why you need the extra index
+plt.xlabel(class_names[target_train[j][0]])
+plt.show()
+# ### Determine shape of the data
+# In[ ]:
+input_shape = (img_width, img_height, img_num_channels)
+# ### Parse numbers as floats
+# In[ ]:
+input_train = input_train.astype('float32')
+input_test = input_test.astype('float32')
+# ### Normalize data
+# In[ ]:
+input_train = input_train / 255
+input_test = input_test / 255
+# ### Create the model
+# In[ ]:
+model = Sequential()
+model.add(Conv2D(32, kernel_size=(3, 3), activation='relu', input_shape
+=input_shape))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Conv2D(64, kernel_size=(3, 3), activation='relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Conv2D(128, kernel_size=(3, 3), activation='relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Flatten())
+model.add(Dense(256, activation='relu'))
+model.add(Dense(128, activation='relu'))
+model.add(Dense(no_classes, activation='softmax'))
+model.summary()
+# ### Compile the model
+# In[ ]:
+model.compile(loss=loss_function,
+optimizer=optimizer,
+metrics=['accuracy'])
+# ### Fit data to model
+# In[ ]:
+history = model.fit(input_train, target_train,
+batch_size=batch_size,
+epochs=no_epochs,
+verbose=verbosity,
+validation_split=validation_split,
+callbacks =[earlystopping])
+# ### Generate generalization metrics
+# In[ ]:
+score = model.evaluate(input_test, target_test, verbose=0)
+print(f'Test loss: {score[0]} / Test accuracy: {score[1]}')
+# ## Visualize history
+# ### Plot history: Loss
+# In[ ]:
+plt.plot(history.history['val_loss'], label="validation loss")
+plt.plot(history.history['val_accuracy'], label ="validation accuracy")
+plt.title('Validation loss history')
+plt.ylabel('Accuracy and Loss')
+plt.xlabel('Epochs')
+plt.legend(loc='upper left')
+plt.show()
+# ### Plot Confusion Matrix
+# In[ ]:
+# Plot confusion matrix
+from sklearn.metrics import confusion_matrix
+import itertools
+plt.rcParams['figure.figsize'] = [10,7]
+def plot_confusion_matrix(cm, classes,normalize=True,title='Confusion m
+atrix',cmap=plt.cm.Blues):
+if normalize:
+cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
+print("Normalized confusion matrix")
+fmt = '.2f'
+else:
+print('Confusion matrix, without normalization')
+fmt = 'd'
+print(cm)
+plt.imshow(cm, interpolation='nearest', cmap=cmap)
+plt.title(title)
+plt.colorbar()
+tick_marks = np.arange(len(classes))
+plt.xticks(tick_marks, classes, rotation=45)
+plt.yticks(tick_marks, classes)
+thresh = cm.max() / 2.
+for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1]))
+:
+plt.text(j, i, format(cm[i, j], fmt),
+horizontalalignment="center",
+color="white" if cm[i, j] > thresh else "black")
+
+plt.tight_layout()
+plt.ylabel('True label')
+plt.xlabel('Predicted label')
+plt.show()
+p_test = model.predict(input_test).argmax(axis=1)
+cm = confusion_matrix(target_test, p_test)
+plot_confusion_matrix(cm, list(range(10)))
+for e in range(10):
+print("{e} - {class_names[e]}\n")
+# ### Show Correct Precition
+# In[ ]:
+misclassified_idx = np.where(p_test == target_test)[0]
+i = np.random.choice(misclassified_idx)
+imgnew=input_test[i] # Reading an Image
+input_imgnew= np.expand_dims(imgnew, axis=0)
+plt.style.use("dark_background")
+plt.imshow(imgnew, cmap=plt.cm.binary)
+plt.title("True label: %s Predicted: %s" %(class_names[target_test[i][0
+]],
+class_names[p_test[i]]));
+# ### Show Incorrect Prediction
+# In[ ]:
+misclassified_idx = np.where(p_test != target_test)[0]
+i = np.random.choice(misclassified_idx)
+imgnew=input_test[i] # Reading an Image
+input_imgnew= np.expand_dims(imgnew, axis=0)
+plt.style.use("dark_background")
+plt.imshow(imgnew, cmap=plt.cm.binary)
+plt.title("True label: %s Predicted: %s" %(class_names[target_test[i][0
+]],
+class_names[p_test[i]]));
