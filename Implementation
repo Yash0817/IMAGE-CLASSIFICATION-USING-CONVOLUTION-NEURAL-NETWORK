@@ -1,0 +1,16 @@
+Step 1: The CIFAR-10 dataset is downloaded from the official website
+Step 2: The dataset is decoded with the use of a Python script to see the actual images and 
+use them.
+Step 3: Two CNN models are built and one is a training model with the use of training 
+dataset.
+Step 4: The model is tested with the use of a test dataset and the performances of both 
+models are evaluated and compared.
+
+IMPLEMENTATION
+ Software Details
+In order to run CNN models, Python requires the following packages: 
+• Tensorflow 1.7.0 
+• Keras 2.1.5 
+• Pickle (Python’s built-in package)
+• NumPy 1.14.2 
+• Matplolib 2.2.2
