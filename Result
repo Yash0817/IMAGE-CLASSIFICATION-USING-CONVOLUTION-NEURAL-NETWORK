@@ -1,0 +1,19 @@
+RESULTS 
+ 
+   
+Validation loss is the same metric as training loss, but it is not used to update the weights. If validation loss > training loss you can call it some overfitting.  
+If validation loss < training loss you can call it some underfitting. If validation loss << training loss you can call it underfitting. Your aim is to make the validation loss as low as possible. Some overfitting is nearly always a good thing. 
+ It also seems that the validation loss will keep going up if I train the model for more epochs. 
+In other words, the test (or testing) accuracy often refers to the validation accuracy, that is, the accuracy you calculate on the data set you do not use for training, but you use (during the training process) for validating (or "testing") the generalisation ability of your model or for "early stopping". 
+ 
+   
+A Confusion matrix is an N x N matrix also known as an error matrix used for evaluating the performance of a classification model, where N is the number of target classes. The matrix compares the actual target values with those predicted by the machine learning model. 
+ 
+The confusion matrices discussed above have only two conditions: positive and negative.  
+ 
+Each row in a confusion matrix represents an actual class, while each column represents a predicted class. 
+o	It evaluates the performance of the classification models, when they make predictions on test data, and tells how good our classification model is. 
+o	It not only tells the error made by the classifiers but also the type of errors such as it is either type-I or type-II error. 
+o	With the help of the confusion matrix, we can calculate the different parameters for the model, such as accuracy, precision, etc. 
+ 
+  
